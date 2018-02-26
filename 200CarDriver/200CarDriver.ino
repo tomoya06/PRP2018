@@ -31,9 +31,9 @@ int leftWheelCNT = 0;
 int rightWheelCNT = 0;
 
 // 各方向位移计数
-char DIR[1000];
-int  CNT[1000];
-int  node = 0;
+int DIR[1000];
+int CNT[1000];
+int node = 0;
 
 void setup() {
     Serial.begin(9600);            
@@ -112,9 +112,9 @@ void setStateStopped() {
  * 向左/向右：原地轉之後前進一個單位
  * 
  * 計數策略：
- * 新建兩個超大數組，DIR為方向，有前F/后B/左L/右R四個值
+ * 新建兩個超大數組，DIR為方向，有0-1-2-3四個值（絕對方向而非相對方向）
  * CNT為對應該方向行進距離（碼盤數值）
- * 向前距離做纍計
+ * 每次動作的直行距離占用一個計數格
  */
 
 /*
@@ -135,6 +135,8 @@ void movement_forward() {
     
     setStateStopped();
 
+    DIR[node] = getDir();
+    CNT[node] = getCnt();
     
 }
 
@@ -147,6 +149,9 @@ void movement_backward() {
     stopp();
     
     setStateStopped();
+
+    DIR[node] = (getDir()+2)%4;
+    CNT[node] = getCnt();
 }
 
 void movement_turnLeft() {
@@ -161,6 +166,9 @@ void movement_turnLeft() {
     stopp;
     
     setStateStopped();
+
+    DIR[node] = getDir();
+    CNT[node] = getCnt();
 }
 
 void movement_turnRight() {
@@ -175,6 +183,9 @@ void movement_turnRight() {
     stopp;
     
     setStateStopped();
+
+    DIR[node] = getDir();
+    CNT[node] = getCnt();
 }
 
 boolean theyAreClose(float cur, int dir) {
