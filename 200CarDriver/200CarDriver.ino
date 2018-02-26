@@ -33,6 +33,7 @@ int rightWheelCNT = 0;
 // 各方向位移计数
 char DIR[1000];
 int  CNT[1000];
+int  node = 0;
 
 void setup() {
     Serial.begin(9600);            
@@ -52,6 +53,7 @@ void setup() {
     /*
      * 初始化：旋轉至角度為0的位置
      */
+    dirInit();
 }
 
 void loop() {
@@ -102,41 +104,6 @@ void setStateStopped() {
     digitalWrite(pinSTATE, 0);
 }
 
-/*
- * 陀螺儀相關函數
- * 注意：陀螺儀輸出角度範圍為-180 ~ 180；
- */
-
-/*
-float getAngle() {
-    while (Serial.available())   
-    {  
-      JY901.CopeSerialData(Serial.read()); //Call JY901 data cope function  
-    }
-    
-    float a = (float)JY901.stcAngle.Angle[2]/32768*180;
-    return a;
-}
-
-float getTargetAngle(float curAngle, boolean left) {
-    float target;
-    if (left) {
-        target = curAngle - 90.0;
-    } else {
-        target = curAngle + 90.0;
-    }
-
-    if (target > 180.0)       target = -180.0+(target-180.0);
-    else if (target <-180.0)  target = 180.0-(-180.0-target);
-    
-    return target;
-}
-
-boolean theyAreClose(float cur, float target) {
-    
-}
-*/
-
 
 /*
  * 行進策略：
@@ -158,6 +125,58 @@ boolean theyAreClose(float cur, float target) {
  * 前右后左依次為0-1-2-3
  */
 
+void movement_forward() {
+    setStateRunning();
+    clearWheelCnt();
+
+    advance();
+    delay(2000);
+    stopp();
+    
+    setStateStopped();
+
+    
+}
+
+void movement_backward() {
+    setStateRunning();
+    clearWheelCnt();
+
+    back();
+    delay(2000);
+    stopp();
+    
+    setStateStopped();
+}
+
+void movement_turnLeft() {
+    setStateRunning();
+
+    turnL90();
+    delay(500);
+    
+    clearWheelCnt();
+    advance();
+    delay(2000);
+    stopp;
+    
+    setStateStopped();
+}
+
+void movement_turnRight() {
+    setStateRunning();
+
+    turnR90();
+    delay(500);
+    
+    clearWheelCnt();
+    advance();
+    delay(2000);
+    stopp;
+    
+    setStateStopped();
+}
+
 boolean theyAreClose(float cur, int dir) {
     switch (dir) {
         case 0: if (cur > -5 && cur < 5) return true;
@@ -173,6 +192,17 @@ float getAngle() {
     
     float a = (float)JY901.stcAngle.Angle[2]/32768*180;
     return a;
+}
+
+int getDir() {
+    float cur = getAngle();
+    int curDir;
+    if (cur > -5 && cur < 5)        curDir = 0;
+    else if (cur > 85 && cur < 95)  curDir = 1;
+    else if (cur >175 || cur <-175) curDir = 2;
+    else if (cur <-85 && cur >-95)  curDir = 3;
+
+    return curDir;
 }
 
 float getTargetDir(float cur, boolean left) {
@@ -212,17 +242,11 @@ void turnR90() {
     stopp();
 }
 
-void goHome() {
-    
-}
-
 void advance() {
     analogWrite(pinRF, 250);
     analogWrite(pinRB,  0);
     analogWrite(pinLF, 250);
-    analogWrite(pinLB, 0);
-    
-    delay(20);       
+    analogWrite(pinLB, 0);  
 }
 
 void turnR() {
@@ -230,8 +254,6 @@ void turnR() {
     analogWrite(pinRB,  0);
     analogWrite(pinLF, 0);
     analogWrite(pinLB, 150);
-    
-    delay(20);
 }
 
 void turnL() {  
@@ -239,25 +261,25 @@ void turnL() {
     analogWrite(pinRB, 150);
     analogWrite(pinLF, 150);
     analogWrite(pinLB, 0);
-    
-    delay(10);
 }    
 
 void stopp() {
     digitalWrite(pinRB, LOW);
     digitalWrite(pinRF, LOW);
-
     digitalWrite(pinLB, LOW);
     digitalWrite(pinLF, LOW);
 }
 
-void back(int g) {
+void back() {
     analogWrite(pinRF, 0);
     analogWrite(pinRB, 150);
     analogWrite(pinLF, 0);
     analogWrite(pinLB, 150);
-    
-    delay(g * 100);     
+}
+
+void clearWheelCnt() {
+    leftWheelCNT = 0;
+    rightWheelCNT= 0;
 }
 
 void leftWheel_cnt() {
@@ -268,5 +290,8 @@ void rightWheel_cnt() {
     rightWheelCNT++;
 }
 
+int getCnt() {
+    return (leftWheelCNT+rightWheelCNT)/2;
+}
 
 
