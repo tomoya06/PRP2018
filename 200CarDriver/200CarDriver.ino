@@ -137,7 +137,7 @@ void movement_forward() {
 
     DIR[node] = getDir();
     CNT[node] = getCnt();
-    
+    node++;
 }
 
 void movement_backward() {
@@ -152,6 +152,7 @@ void movement_backward() {
 
     DIR[node] = (getDir()+2)%4;
     CNT[node] = getCnt();
+    node++;
 }
 
 void movement_turnLeft() {
@@ -169,6 +170,7 @@ void movement_turnLeft() {
 
     DIR[node] = getDir();
     CNT[node] = getCnt();
+    node++;
 }
 
 void movement_turnRight() {
@@ -186,6 +188,7 @@ void movement_turnRight() {
 
     DIR[node] = getDir();
     CNT[node] = getCnt();
+    node++;
 }
 
 boolean theyAreClose(float cur, int dir) {
