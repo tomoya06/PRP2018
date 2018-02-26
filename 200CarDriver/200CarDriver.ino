@@ -2,6 +2,7 @@
 
 #include <Servo.h> 
 #include <Wire.h>
+#include <JY901.h>
 
 #define CODE_FORWARD      111
 #define CODE_LEFT         101
@@ -233,13 +234,13 @@ void turnR() {
     delay(20);
 }
 
-void turnL(int e) {  
+void turnL() {  
     analogWrite(pinRF, 0);
     analogWrite(pinRB, 150);
     analogWrite(pinLF, 150);
     analogWrite(pinLB, 0);
     
-    delay(e * 10);
+    delay(10);
 }    
 
 void stopp() {
@@ -267,9 +268,5 @@ void rightWheel_cnt() {
     rightWheelCNT++;
 }
 
-void clearCNT() {
-    leftCNT = 0;
-    rightCNT = 0;
-}
 
 
