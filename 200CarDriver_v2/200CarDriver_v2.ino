@@ -49,11 +49,6 @@ void setup() {
 
     attachInterrupt(0,  leftWheel_cnt, RISING);  
     attachInterrupt(1, rightWheel_cnt, RISING);
-
-    /*
-     * 初始化：旋轉至角度為0的位置
-     */
-    // dirInit();
 }
 
 void loop() {
@@ -157,11 +152,13 @@ void movement_turnLeft() {
 
     turnL90();
     delay(500);
-    
+
+    /*
     clearWheelCnt();
     advance();
     delay(1000);
     stopp();
+    */
     
     setStateStopped();
 
@@ -175,11 +172,13 @@ void movement_turnRight() {
 
     turnR90();
     delay(500);
-    
+
+    /*
     clearWheelCnt();
     advance();
     delay(1000);
     stopp();
+    */
     
     setStateStopped();
 
