@@ -53,28 +53,33 @@ void setup() {
     /*
      * 初始化：旋轉至角度為0的位置
      */
-    dirInit();
+    // dirInit();
 }
 
 void loop() {
 
     int codes = decoder();
-    Serial.println(codes);
-    
+
     if (codes > CODE_ZERO) {
+        delay(5);
+        codes = decoder();
 
         // 解码并执行指令
         switch (codes) {
             case CODE_FORWARD:
+                Serial.println("前前前前前前前前前前前前前");
                 movement_forward();
                 break;
             case CODE_LEFT:
+                Serial.println("左左左左左左左左左左左左左");
                 movement_turnLeft();
                 break;
             case CODE_RIGHT:
+                Serial.println("右右右右右右右右右右右右右");
                 movement_turnRight();
                 break;
             case CODE_BACKWARD:
+                Serial.println("后后后后后后后后后后后后后");
                 movement_backward();
                 break;
             case CODE_BACK:
@@ -164,7 +169,7 @@ void movement_turnLeft() {
     clearWheelCnt();
     advance();
     delay(1000);
-    stopp;
+    stopp();
     
     setStateStopped();
 
@@ -182,7 +187,7 @@ void movement_turnRight() {
     clearWheelCnt();
     advance();
     delay(1000);
-    stopp;
+    stopp();
     
     setStateStopped();
 
