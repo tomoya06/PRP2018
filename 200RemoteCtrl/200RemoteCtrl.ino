@@ -35,14 +35,13 @@ LeweiTcpClient *client;
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     pinMode(pinCode1, OUTPUT);
     pinMode(pinCode2, OUTPUT);
     pinMode(pinCode3, OUTPUT);
 
     pinMode(LED_PIN, OUTPUT);
 
-    Serial.begin(9600);
     Serial.println("Loading...");
     client = new LeweiTcpClient(LW_USERKEY, LW_GATEWAY);
   
@@ -70,8 +69,9 @@ void loop()
 {
     client->keepOnline();
 
-    if (abs(millis() - lastMillis) > 2000) {
+    if (abs(millis() - lastMillis) > 500) {
         clearCodes();
+        lastMillis = millis();
     }
 }
 

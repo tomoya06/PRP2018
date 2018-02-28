@@ -31,12 +31,12 @@ int leftWheelCNT = 0;
 int rightWheelCNT = 0;
 
 // 各方向位移计数
-int DIR[1000];
-int CNT[1000];
+int DIR[100];
+int CNT[100];
 int node = 0;
 
 void setup() {
-    Serial.begin(9600);            
+    Serial.begin(115200);            
     pinMode(pinLB,  OUTPUT);        
     pinMode(pinLF,  OUTPUT);       
     pinMode(pinRB,  OUTPUT);       
@@ -59,31 +59,31 @@ void setup() {
 void loop() {
 
     int codes = decoder();
+    Serial.println(codes);
+    
     if (codes > CODE_ZERO) {
-        setStateRunning();
 
         // 解码并执行指令
         switch (codes) {
             case CODE_FORWARD:
-                
+                movement_forward();
                 break;
             case CODE_LEFT:
-    
+                movement_turnLeft();
                 break;
             case CODE_RIGHT:
-    
+                movement_turnRight();
                 break;
             case CODE_BACKWARD:
-    
+                movement_backward();
                 break;
             case CODE_BACK:
-    
+            
                 break;
             default: 
                 break;
         }
       
-        setStateStopped();
     }
     
 }
@@ -130,7 +130,7 @@ void movement_forward() {
     clearWheelCnt();
 
     advance();
-    delay(2000);
+    delay(1000);
     stopp();
     
     setStateStopped();
@@ -145,7 +145,7 @@ void movement_backward() {
     clearWheelCnt();
 
     back();
-    delay(2000);
+    delay(1000);
     stopp();
     
     setStateStopped();
@@ -163,7 +163,7 @@ void movement_turnLeft() {
     
     clearWheelCnt();
     advance();
-    delay(2000);
+    delay(1000);
     stopp;
     
     setStateStopped();
@@ -181,7 +181,7 @@ void movement_turnRight() {
     
     clearWheelCnt();
     advance();
-    delay(2000);
+    delay(1000);
     stopp;
     
     setStateStopped();
@@ -189,6 +189,10 @@ void movement_turnRight() {
     DIR[node] = getDir();
     CNT[node] = getCnt();
     node++;
+}
+
+void movement_gohome() {
+    
 }
 
 boolean theyAreClose(float cur, int dir) {
@@ -225,6 +229,10 @@ float getTargetDir(float cur, boolean left) {
     else if (cur > 85 && cur < 95)  curDir = 1;
     else if (cur >175 || cur <-175) curDir = 2;
     else if (cur <-85 && cur >-95)  curDir = 3;
+    else {
+        dirInit();
+        curDir = 0;
+    }
 
     if (left) curDir = (curDir+1)%4;
         else  curDir = (curDir+3)%4;
@@ -256,24 +264,30 @@ void turnR90() {
     stopp();
 }
 
+void gohome() {
+    while (--node >= 0) {
+        
+    }
+}
+
 void advance() {
-    analogWrite(pinRF, 250);
-    analogWrite(pinRB,  0);
-    analogWrite(pinLF, 250);
-    analogWrite(pinLB, 0);  
+    analogWrite(pinRF, 0);
+    analogWrite(pinRB, 250);
+    analogWrite(pinLF, 0);
+    analogWrite(pinLB, 250);   
 }
 
 void turnR() {
     analogWrite(pinRF, 250);
-    analogWrite(pinRB,  0);
+    analogWrite(pinRB, 0);
     analogWrite(pinLF, 0);
-    analogWrite(pinLB, 150);
+    analogWrite(pinLB, 250);
 }
 
 void turnL() {  
     analogWrite(pinRF, 0);
-    analogWrite(pinRB, 150);
-    analogWrite(pinLF, 150);
+    analogWrite(pinRB, 250);
+    analogWrite(pinLF, 250);
     analogWrite(pinLB, 0);
 }    
 
@@ -285,10 +299,10 @@ void stopp() {
 }
 
 void back() {
-    analogWrite(pinRF, 0);
-    analogWrite(pinRB, 150);
-    analogWrite(pinLF, 0);
-    analogWrite(pinLB, 150);
+    analogWrite(pinRF, 250);
+    analogWrite(pinRB, 0);
+    analogWrite(pinLF, 250);
+    analogWrite(pinLB, 0);
 }
 
 void clearWheelCnt() {
