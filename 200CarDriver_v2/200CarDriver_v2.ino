@@ -8,7 +8,7 @@
 #define CODE_LEFT         101
 #define CODE_RIGHT        110
 #define CODE_BACKWARD     100
-#define CODE_BACK         011
+#define CODE_BACK         001
 #define CODE_ZERO         000
 
 // 馬達引脚
@@ -47,8 +47,6 @@ void setup() {
     pinMode(pinCode3, INPUT);
     pinMode(pinSTATE, OUTPUT);
 
-    attachInterrupt(0,  leftWheel_cnt, RISING);  
-    attachInterrupt(1, rightWheel_cnt, RISING);
 }
 
 void loop() {
@@ -78,9 +76,11 @@ void loop() {
                 movement_backward();
                 break;
             case CODE_BACK:
-            
+                Serial.println("完完完完完完完完完完完完完");
+                movement_gohome();
                 break;
             default: 
+                Serial.println(codes);
                 break;
         }
       
@@ -120,75 +120,82 @@ void setStateStopped() {
 void movement_forward() {
     setStateRunning();
     clearWheelCnt();
+    attachInterrupt(0,  leftWheel_cnt, RISING);
 
     advance();
     delay(1000);
     stopp();
     
     setStateStopped();
+    detachInterrupt(0);    
 
     DIR[node] = 1;
     CNT[node] = getCnt();
+         
+    Serial.println(leftWheelCNT);
+    Serial.println(rightWheelCNT);
+    Serial.println(CNT[node]);
+    Serial.println(node);
     node++;
 }
 
 void movement_backward() {
     setStateRunning();
     clearWheelCnt();
+    attachInterrupt(0,  leftWheel_cnt, RISING);
 
     back();
     delay(1000);
     stopp();
     
     setStateStopped();
+    detachInterrupt(0); 
 
     DIR[node] = 3;
     CNT[node] = getCnt();
+    
+    Serial.println(leftWheelCNT);
+    Serial.println(rightWheelCNT);
+    Serial.println(CNT[node]);
+    Serial.println(node);
     node++;
 }
 
 void movement_turnLeft() {
     setStateRunning();
 
-    turnL90();
-    delay(500);
-
-    /*
-    clearWheelCnt();
-    advance();
+//    turnL90();
     delay(1000);
-    stopp();
-    */
-    
     setStateStopped();
 
     DIR[node] = 4;
-    CNT[node] = getCnt();
+    CNT[node] = 0;
+    Serial.println(node);
     node++;
 }
 
 void movement_turnRight() {
     setStateRunning();
 
-    turnR90();
-    delay(500);
-
-    /*
-    clearWheelCnt();
-    advance();
+//    turnR90();
     delay(1000);
-    stopp();
-    */
-    
     setStateStopped();
 
     DIR[node] = 2;
-    CNT[node] = getCnt();
+    CNT[node] = 0;
+    Serial.println(node);
     node++;
 }
 
 void movement_gohome() {
+    setStateRunning();
+    for (int i = 0; i < node; i++) {
+        Serial.println();
+        Serial.print(i); Serial.print(": "); Serial.print(DIR[i]); Serial.println(" -> "); Serial.println(CNT[node]);
+    }
+    delay(1000);
     
+    setStateStopped();
 }
 
 /*
@@ -311,7 +318,7 @@ void rightWheel_cnt() {
 }
 
 int getCnt() {
-    return (leftWheelCNT+rightWheelCNT)/2;
+    return (leftWheelCNT > rightWheelCNT)? leftWheelCNT: rightWheelCNT;
 }
 
 

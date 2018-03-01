@@ -15,7 +15,7 @@
 #define CODE_LEFT         101
 #define CODE_RIGHT        110
 #define CODE_BACKWARD     100
-#define CODE_BACK         011
+#define CODE_BACK         001
 #define CODE_ZERO         000
 
 #define LED_PIN           3
