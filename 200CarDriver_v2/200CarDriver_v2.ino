@@ -1,4 +1,4 @@
-// 本代碼為執行端使用
+ // 本代碼為執行端使用
 
 #include <Servo.h> 
 #include <Wire.h>
@@ -164,7 +164,7 @@ void movement_backward() {
 void movement_turnLeft() {
     setStateRunning();
 
-//    turnL90();
+    turnL90();
     delay(1000);
     setStateStopped();
 
@@ -177,7 +177,7 @@ void movement_turnLeft() {
 void movement_turnRight() {
     setStateRunning();
 
-//    turnR90();
+    turnR90();
     delay(1000);
     setStateStopped();
 
